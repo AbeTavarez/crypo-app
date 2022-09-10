@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   coinContainer: {
     flexDirection: 'row',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'grey',
+    borderBottomColor: '#1CD6CE',
     // borderBottomColor: '#282828',
     padding: 15
   },
