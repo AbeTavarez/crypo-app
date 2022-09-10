@@ -14,14 +14,14 @@ const CoinItem = ({ marketCoin }) => {
   } = marketCoin;
 
   const normalizeMarketCap = (marketCap) => {
-    if (marketCap > 1_000_000_000_000) {
-      return `${Math.floor(marketCap / 1_000_000_000_000)} T`;
-    } else if (marketCap > 1_000_000_000) {
-      return `${Math.floor(marketCap / 1_000_000_000)} B`;
-    } else if (marketCap > 1_000_000) {
-      return `${Math.floor(marketCap / 1_000_000)} M`;
-    } else if (marketCap > 1_000) {
-      return `${Math.floor(marketCap / 1_000)} K`;
+    if (marketCap > 1000000000000) {
+      return `${Math.floor(marketCap / 1000000000000)} T`;
+    } else if (marketCap > 1000000000) {
+      return `${Math.floor(marketCap / 1000000000)} B`;
+    } else if (marketCap > 1000000) {
+      return `${Math.floor(marketCap / 1000000)} M`;
+    } else if (marketCap > 1000) {
+      return `${Math.floor(marketCap / 1000)} K`;
     } else {
       return marketCap;
     }
