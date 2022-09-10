@@ -15,7 +15,7 @@ const CoinDetailsHeader = ({ small, symbol, market_cap_rank }) => {
         </View>
       </View>
 
-      <EvilIcons name="user" size={30} color="white" />
+      <EvilIcons name="star" size={30} color="white" />
     </View>
   );
 };
