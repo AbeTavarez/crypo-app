@@ -1,4 +1,12 @@
-import { Text, View, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  TextInput
+} from 'react-native';
 import CoinDetailsHeader from './components/CoinDetailsHeader';
 import cryptoCoin from '../../../assets/data/cryptocoin.json';
 import { AntDesign } from '@expo/vector-icons';
@@ -8,6 +16,7 @@ import {
   ChartPathProvider,
   ChartYLabel
 } from '@rainbow-me/animated-charts';
+import { styles } from './styles';
 
 const CoinDetailsScreen = ({}) => {
   const {
@@ -22,6 +31,17 @@ const CoinDetailsScreen = ({}) => {
     prices
   } = cryptoCoin;
 
+  const [coinValue, setCoinValue] = useState('1');
+  const [usdValue, setUsdValue] = useState(current_price.usd.toString());
+
+  // useEffect(() => {
+
+  // }, [coinValue])
+
+  // useEffect(() => {
+
+  // }, [usdValue])
+
   const pricePercentageColor =
     price_change_percentage_24h < 0 ? '#ea3943' : '#16c784';
 
@@ -33,6 +53,19 @@ const CoinDetailsScreen = ({}) => {
       return `$${current_price.usd.toFixed(2)}`;
     }
     return `$${parseFloat(value).toFixed(2)}`;
+  };
+
+  // =====> Currency Cal
+  const onChangeCoinValue = (value) => {
+    setCoinValue(value); // set val in state
+    const floatVal = parseFloat(value.replace(',', '.')) || 0;
+    setUsdValue((floatVal * current_price.usd).toString());
+  };
+
+  const onChangeUsdValue = (value) => {
+    setUsdValue(value);
+    const floatVal = parseFloat(value.replace(',', '.')) || 0;
+    setCoinValue((floatVal / current_price.usd).toString());
   };
 
   return (
@@ -88,44 +121,34 @@ const CoinDetailsScreen = ({}) => {
               backgroundColor:
                 current_price.usd > prices[0][1] ? '#16c784' : '#ea3943'
             }}
-            // style={{ backgroundColor: 'red' }}
           />
+        </View>
+
+        <View style={styles.currCalContainer}>
+          <View style={styles.calRow}>
+            <Text style={styles.calText}>{symbol.toUpperCase()}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={coinValue}
+              keyboardType="numeric"
+              onChangeText={onChangeCoinValue}
+            />
+          </View>
+
+          <View style={styles.calRow}>
+            <Text style={styles.calText}>USD</Text>
+            <TextInput
+              placeholder="Amount"
+              style={styles.textInput}
+              value={usdValue}
+              keyboardType="number-pad"
+              onChangeText={onChangeUsdValue}
+            />
+          </View>
         </View>
       </ChartPathProvider>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10
-  },
-  priceContainer: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  name: {
-    color: '#fff',
-    fontSize: 15
-  },
-  currentPrice: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
-    letterSpacing: 1
-  },
-  priceChange: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '500'
-  },
-  priceChangeContainer: {
-    flexDirection: 'row',
-    padding: 5,
-    borderRadius: 5
-  }
-});
 
 export default CoinDetailsScreen;
