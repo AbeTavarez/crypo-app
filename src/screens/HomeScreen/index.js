@@ -11,14 +11,18 @@ const HomeScreen = () => {
     fetchCoins();
   }, []);
 
-  const fetchCoins = async () => {
+  const fetchCoins = async (pageNumber) => {
+    if (loading) return;
+
     setLoading(true);
-    const coinsData = await getMarketData();
-    setCoins(coinsData);
+    const coinsData = await getMarketData(pageNumber);
+    setCoins((prevState) => [...prevState, ...coinsData]);
     setLoading(false);
   };
 
   const refreshCoins = async () => {
+    if (loading) return;
+
     setLoading(true);
     const coinsData = await getMarketData();
     setCoins(coinsData);
@@ -28,6 +32,7 @@ const HomeScreen = () => {
     <FlatList
       data={coins}
       renderItem={({ item }) => <CoinItem marketCoin={item} />}
+      onEndReached={() => fetchCoins(coins.length / 50 + 1)}
       refreshControl={
         <RefreshControl
           refreshing={loading}
