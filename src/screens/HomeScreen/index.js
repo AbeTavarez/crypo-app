@@ -1,12 +1,40 @@
-import { FlatList } from 'react-native';
+import { useEffect, useState } from 'react';
+import { FlatList, RefreshControl } from 'react-native';
 import CoinItem from '../../components/CoinItem';
-import Cryptocurrencies from '../../../assets/data/cryptocurrencies.json';
+import { getMarketData } from '../../services/apis/cryptoapi';
 
 const HomeScreen = () => {
+  const [coins, setCoins] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchCoins();
+  }, []);
+
+  const fetchCoins = async () => {
+    setLoading(true);
+    const coinsData = await getMarketData();
+    setCoins(coinsData);
+    setLoading(false);
+  };
+
+  const refreshCoins = async () => {
+    setLoading(true);
+    const coinsData = await getMarketData();
+    setCoins(coinsData);
+    setLoading(false);
+  };
   return (
     <FlatList
-      data={Cryptocurrencies}
+      data={coins}
       renderItem={({ item }) => <CoinItem marketCoin={item} />}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          tintColor="#fff"
+          onRefresh={refreshCoins}
+        />
+      }
     />
   );
 };
