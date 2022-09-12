@@ -3,9 +3,9 @@ import {
   Text,
   View,
   ScrollView,
-  StyleSheet,
   Dimensions,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native';
 import CoinDetailsHeader from './components/CoinDetailsHeader';
 import cryptoCoin from '../../../assets/data/cryptocoin.json';
@@ -16,44 +16,61 @@ import {
   ChartPathProvider,
   ChartYLabel
 } from '@rainbow-me/animated-charts';
+import { useRoute } from '@react-navigation/native';
+import {
+  getCoinDetailsData,
+  getCoinMarketChart
+} from '../../services/apis/cryptoapi';
 import { styles } from './styles';
 
 const CoinDetailsScreen = ({}) => {
+  // ===== Coin Data fetching ===== >
+  const [coinData, setCoinData] = useState(null);
+  const [coinMarketData, setCoinMarketData] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [coinValue, setCoinValue] = useState('1');
+  const [usdValue, setUsdValue] = useState('');
+
+  const route = useRoute();
+  const {
+    params: { coinId }
+  } = route;
+
+  // Func will fetch: coin data and coin market data
+  const fetchCoinData = async (coinId) => {
+    setIsFetching(true);
+    const fetchedData = await getCoinDetailsData(coinId);
+    const fetchedCoinMarketData = getCoinMarketChart(coinId);
+    setCoinData(fetchedData);
+    setCoinMarketData(fetchedCoinMarketData);
+    setUsdValue(fetchedData.market_data.current_price.usd.toString());
+    setIsFetching(false);
+  };
+  // fetching on load
+  useEffect(() => {
+    fetchCoinData(coinId);
+  }, []);
+
+  if (isFetching || !coinData || !coinMarketData) {
+    return <ActivityIndicator size="large" />;
+  }
+
   const {
     image: { small },
     symbol,
     name,
-    market_data: {
-      market_cap_rank,
-      current_price,
-      price_change_percentage_24h
-    },
-    prices
-  } = cryptoCoin;
+    market_data: { market_cap_rank, current_price, price_change_percentage_24h }
+  } = coinData;
 
-  const [coinValue, setCoinValue] = useState('1');
-  const [usdValue, setUsdValue] = useState(current_price.usd.toString());
+  let prices = [];
+  if (coinMarketData) {
+    prices = coinMarketData.prices;
+    console.log('===> ', prices);
+  }
 
-  // useEffect(() => {
-
-  // }, [coinValue])
-
-  // useEffect(() => {
-
-  // }, [usdValue])
-
-  const pricePercentageColor =
-    price_change_percentage_24h < 0 ? '#ea3943' : '#16c784';
+  // const [usdValue, setUsdValue] = useState(current_price.usd.toString());
 
   const screenWidth = Dimensions.get('window').width;
-
-  const formatCurrency = (value) => {
-    'worklet';
-    if (value === '') {
-      return `$${current_price.usd.toFixed(2)}`;
-    }
-    return `$${parseFloat(value).toFixed(2)}`;
-  };
 
   // =====> Currency Cal
   const onChangeCoinValue = (value) => {
@@ -68,11 +85,23 @@ const CoinDetailsScreen = ({}) => {
     setCoinValue((floatVal / current_price.usd).toString());
   };
 
+  const formatCurrency = (value) => {
+    'worklet';
+    if (value === '') {
+      return `$${current_price.usd.toFixed(2)}`;
+    }
+    return `$${parseFloat(value).toFixed(2)}`;
+  };
+
+  const pricePercentageColor =
+    price_change_percentage_24h < 0 ? '#ea3943' : '#16c784';
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ChartPathProvider
         data={{
-          points: prices.map((price) => ({ x: price[0], y: price[1] })),
+          points:
+            prices && prices.map((price) => ({ x: price[0], y: price[1] })),
           // points: prices.map(([x, y]) => ({ x, y })),
           smoothingStrategy: 'bezier'
         }}
@@ -110,16 +139,20 @@ const CoinDetailsScreen = ({}) => {
 
         <View>
           <ChartPath
-            height={screenWidth / 2}
-            stroke="yellow"
-            // stroke={current_price.usd > prices[0][1] ? '#16c784' : '#ea3943'}
-            strokeWidth={2}
+            height={screenWidth}
+            // stroke="yellow"
+            stroke={
+              current_price.usd > prices && prices[0][1] ? '#16c784' : '#ea3943'
+            }
+            // strokeWidth={2}
             width={screenWidth}
           />
           <ChartDot
             style={{
               backgroundColor:
-                current_price.usd > prices[0][1] ? '#16c784' : '#ea3943'
+                current_price.usd > prices && prices[0][1]
+                  ? '#16c784'
+                  : '#ea3943'
             }}
           />
         </View>
@@ -147,7 +180,7 @@ const CoinDetailsScreen = ({}) => {
           </View>
         </View>
       </ChartPathProvider>
-    </View>
+    </ScrollView>
   );
 };
 
