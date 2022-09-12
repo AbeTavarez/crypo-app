@@ -40,7 +40,7 @@ const CoinDetailsScreen = ({}) => {
   const fetchCoinData = async (coinId) => {
     setIsFetching(true);
     const fetchedData = await getCoinDetailsData(coinId);
-    const fetchedCoinMarketData = getCoinMarketChart(coinId);
+    const fetchedCoinMarketData = await getCoinMarketChart(coinId);
     setCoinData(fetchedData);
     setCoinMarketData(fetchedCoinMarketData);
     setUsdValue(fetchedData.market_data.current_price.usd.toString());
@@ -51,7 +51,7 @@ const CoinDetailsScreen = ({}) => {
     fetchCoinData(coinId);
   }, []);
 
-  if (isFetching || !coinData || !coinMarketData) {
+  if (!coinData || !coinMarketData || isFetching) {
     return <ActivityIndicator size="large" />;
   }
 
@@ -62,11 +62,8 @@ const CoinDetailsScreen = ({}) => {
     market_data: { market_cap_rank, current_price, price_change_percentage_24h }
   } = coinData;
 
-  let prices = [];
-  if (coinMarketData) {
-    prices = coinMarketData.prices;
-    console.log('===> ', prices);
-  }
+  const { market_caps } = coinMarketData;
+  console.log(coinMarketData);
 
   // const [usdValue, setUsdValue] = useState(current_price.usd.toString());
 
@@ -101,7 +98,8 @@ const CoinDetailsScreen = ({}) => {
       <ChartPathProvider
         data={{
           points:
-            prices && prices.map((price) => ({ x: price[0], y: price[1] })),
+            market_caps &&
+            market_caps.map((price) => ({ x: price[0], y: price[1] })),
           // points: prices.map(([x, y]) => ({ x, y })),
           smoothingStrategy: 'bezier'
         }}
@@ -116,7 +114,6 @@ const CoinDetailsScreen = ({}) => {
           <View>
             <Text style={styles.name}>{name}</Text>
             <ChartYLabel format={formatCurrency} style={styles.currentPrice} />
-            {/* <Text style={styles.currentPrice}>${current_price.usd}</Text> */}
           </View>
 
           <View
@@ -142,7 +139,9 @@ const CoinDetailsScreen = ({}) => {
             height={screenWidth}
             // stroke="yellow"
             stroke={
-              current_price.usd > prices && prices[0][1] ? '#16c784' : '#ea3943'
+              current_price.usd > market_caps && market_caps[0][1]
+                ? '#16c784'
+                : '#ea3943'
             }
             // strokeWidth={2}
             width={screenWidth}
@@ -150,7 +149,7 @@ const CoinDetailsScreen = ({}) => {
           <ChartDot
             style={{
               backgroundColor:
-                current_price.usd > prices && prices[0][1]
+                current_price.usd > market_caps && market_caps[0][1]
                   ? '#16c784'
                   : '#ea3943'
             }}
