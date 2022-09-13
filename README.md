@@ -13,7 +13,7 @@
 
 ## Screenshots
 
-![home page](https://reactnative-assets.s3.amazonaws.com/crypto-app1.PNG)![coin details page](https://reactnative-assets.s3.amazonaws.com/crypto-app2.PNG)
+![app screens](https://reactnative-assets.s3.amazonaws.com/crypto-readme-layout.png)
 
 # Status
 
