@@ -63,7 +63,7 @@ const CoinDetailsScreen = ({}) => {
   } = coinData;
 
   const { market_caps } = coinMarketData;
-  console.log(coinMarketData);
+  // console.log(coinMarketData);
 
   // const [usdValue, setUsdValue] = useState(current_price.usd.toString());
 
