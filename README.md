@@ -11,7 +11,7 @@
   - React Navigation
   - React Native Chats 
 
-## Screenshots
+## App Screenshots
 
 ![app screens](https://reactnative-assets.s3.amazonaws.com/crypto-readme-layout.png)
 
