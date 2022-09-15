@@ -30,8 +30,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
-    // backgroundColor: '#0F3460',
-    // backgroundColor: '#293462',
     paddingTop: 50
   },
   appName: {

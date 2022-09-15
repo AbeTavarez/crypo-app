@@ -56,6 +56,7 @@ const CoinDetailsScreen = ({}) => {
   }
 
   const {
+    id,
     image: { small },
     symbol,
     name,
@@ -100,12 +101,12 @@ const CoinDetailsScreen = ({}) => {
           points:
             market_caps &&
             market_caps.map((price) => ({ x: price[0], y: price[1] })),
-          // points: prices.map(([x, y]) => ({ x, y })),
           smoothingStrategy: 'bezier'
         }}
       >
         <CoinDetailsHeader
-          small={small}
+          coinId={id}
+          image={small}
           symbol={symbol}
           market_cap_rank={market_cap_rank}
         />
