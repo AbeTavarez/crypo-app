@@ -4,6 +4,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import CoinDetailsScreen from './src/screens/CoinDetailsScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './src/navigation';
+import WatchListProvider from './src/Contexts/WatchListContext';
 
 export default function App() {
   return (
@@ -14,11 +15,13 @@ export default function App() {
         }
       }}
     >
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <Text style={styles.appName}>CryptoNite</Text>
-        <Navigation />
-      </View>
+      <WatchListProvider>
+        <View style={styles.container}>
+          <StatusBar style="light" />
+          <Text style={styles.appName}>CryptoNite</Text>
+          <Navigation />
+        </View>
+      </WatchListProvider>
     </NavigationContainer>
   );
 }
@@ -27,8 +30,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
-    // backgroundColor: '#0F3460',
-    // backgroundColor: '#293462',
     paddingTop: 50
   },
   appName: {
