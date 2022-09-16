@@ -39,9 +39,8 @@ export const getCoinMarketChart = async (coinId, currency = 'usd') => {
 export const getWatchListedCoins = async (page = 1, coinIds) => {
   try {
     const res = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids${coinIds}&order=market_cap_desc&per_page=50&page=${page}&sparkline=false&price_change_percentage=24h`
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinIds}&order=market_cap_desc&per_page=50&page=${page}&sparkline=false`
     );
-    // console.log('from res', res.data);
     return res.data;
   } catch (e) {
     console.error(e);

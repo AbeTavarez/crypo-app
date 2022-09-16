@@ -13,15 +13,17 @@ const WatchListScreen = () => {
     fetchWatchListedCoins();
   }, []);
 
-  // useEffect(() => {
-  //   fetchWatchListedCoins();
-  // }, [watchListCoinIds]);
+  useEffect(() => {
+    fetchWatchListedCoins();
+  }, [watchListCoinIds]);
 
   const fetchWatchListedCoins = async () => {
-    if (loading) {
+    if (loading || !watchListCoinIds.length) {
+      console.log('returning...');
       return;
     }
     setLoading(true);
+
     const watchListedCoinsData = await getWatchListedCoins(
       1,
       transformCoinIds()
@@ -31,13 +33,8 @@ const WatchListScreen = () => {
     setLoading(false);
   };
 
-  const transformCoinIds = () => {
-    return watchListCoinIds.join('%2C');
-  };
+  const transformCoinIds = () => watchListCoinIds.join('%2C');
 
-  // console.log('data====================', transformCoinIds());
-  // console.log('coins==============', coins);
-  // console.log('here', watchListCoinIds);
   return (
     <View>
       <FlatList
