@@ -53,5 +53,26 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'center',
     flex: 1
+  },
+  header: {
+    // textAlign: 'center',
+    color: '#1CD6CE',
+    fontSize: 29,
+    fontWeight: 'bold',
+    marginVertical: 20
+  },
+  descriptionContainer: {
+    marginHorizontal: 5,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  },
+  textDetail: {
+    color: '#fff',
+    fontSize: 18
+  },
+  highlightsContainer: {
+    marginHorizontal: 5,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   }
 });

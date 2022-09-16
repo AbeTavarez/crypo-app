@@ -8,7 +8,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import CoinDetailsHeader from './components/CoinDetailsHeader';
-import cryptoCoin from '../../../assets/data/cryptocoin.json';
 import { AntDesign } from '@expo/vector-icons';
 import {
   ChartDot,
@@ -60,11 +59,23 @@ const CoinDetailsScreen = ({}) => {
     image: { small },
     symbol,
     name,
-    market_data: { market_cap_rank, current_price, price_change_percentage_24h }
+    market_data: {
+      market_cap_rank,
+      current_price,
+      price_change_percentage_24h
+    },
+    description,
+    liquidity_score,
+    developer_score,
+    genesis_date,
+    hashing_algorithm,
+    blockchain_site,
+    chat_url
   } = coinData;
 
   const { market_caps } = coinMarketData;
   // console.log(coinMarketData);
+  // console.log(coinData);
 
   // const [usdValue, setUsdValue] = useState(current_price.usd.toString());
 
@@ -93,6 +104,8 @@ const CoinDetailsScreen = ({}) => {
 
   const pricePercentageColor =
     price_change_percentage_24h < 0 ? '#ea3943' : '#16c784';
+
+  const removeTagsRegex = /<[^>]*>+/g;
 
   return (
     <ScrollView style={styles.container}>
@@ -156,28 +169,61 @@ const CoinDetailsScreen = ({}) => {
             }}
           />
         </View>
+        {/* ============== Calculate ====================== */}
+        <View>
+          <Text style={styles.header}>Calculate</Text>
+          <View style={styles.currCalContainer}>
+            <View style={styles.calRow}>
+              <Text style={styles.calText}>{symbol.toUpperCase()}</Text>
+              <TextInput
+                style={styles.textInput}
+                value={coinValue}
+                keyboardType="numeric"
+                onChangeText={onChangeCoinValue}
+              />
+            </View>
 
-        <View style={styles.currCalContainer}>
-          <View style={styles.calRow}>
-            <Text style={styles.calText}>{symbol.toUpperCase()}</Text>
-            <TextInput
-              style={styles.textInput}
-              value={coinValue}
-              keyboardType="numeric"
-              onChangeText={onChangeCoinValue}
-            />
+            <View style={styles.calRow}>
+              <Text style={styles.calText}>USD</Text>
+              <TextInput
+                placeholder="Amount"
+                style={styles.textInput}
+                value={usdValue}
+                keyboardType="number-pad"
+                onChangeText={onChangeUsdValue}
+              />
+            </View>
           </View>
+        </View>
 
-          <View style={styles.calRow}>
-            <Text style={styles.calText}>USD</Text>
-            <TextInput
-              placeholder="Amount"
-              style={styles.textInput}
-              value={usdValue}
-              keyboardType="number-pad"
-              onChangeText={onChangeUsdValue}
-            />
-          </View>
+        {/* Coin description  */}
+
+        {/* liquidity_score,
+    developer_score,
+    genesis_dat,
+    hashing_algorithm,
+    blockchain_site,
+    chat_url */}
+
+        <View style={styles.highlightsContainer}>
+          <Text style={styles.header}>Stats</Text>
+          <Text style={styles.textDetail}>
+            Liquidity Score: {liquidity_score}
+          </Text>
+          <Text style={styles.textDetail}>
+            Developer Score: {developer_score}
+          </Text>
+          <Text style={styles.textDetail}>Genesis Date: {genesis_date}</Text>
+          <Text style={styles.textDetail}>
+            hashing Algorithm: {hashing_algorithm}
+          </Text>
+        </View>
+
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.header}>About {symbol.toUpperCase()}</Text>
+          <Text style={styles.textDetail}>
+            {description.en.replaceAll(removeTagsRegex, '')}
+          </Text>
         </View>
       </ChartPathProvider>
     </ScrollView>
