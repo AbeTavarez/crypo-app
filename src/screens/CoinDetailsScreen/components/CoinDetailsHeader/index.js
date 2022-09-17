@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { useWatchList } from '../../../../Contexts/WatchListContext';
+import Animated, { BounceIn } from 'react-native-reanimated';
 
 const CoinDetailsHeader = ({ coinId, image, symbol, market_cap_rank }) => {
   const navigation = useNavigation();
@@ -37,12 +38,14 @@ const CoinDetailsHeader = ({ coinId, image, symbol, market_cap_rank }) => {
         </View>
       </View>
 
-      <Ionicons
-        name={checkCoinWatchListed() ? 'star' : 'star-outline'}
-        size={25}
-        color={checkCoinWatchListed() ? '#ffbf00' : '#fff'}
-        onPress={handleWatchListCoin}
-      />
+      <Animated.View entering={BounceIn}>
+        <Ionicons
+          name={checkCoinWatchListed() ? 'star' : 'star-outline'}
+          size={25}
+          color={checkCoinWatchListed() ? '#ffbf00' : '#fff'}
+          onPress={handleWatchListCoin}
+        />
+      </Animated.View>
     </View>
   );
 };
