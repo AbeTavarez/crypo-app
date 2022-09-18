@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
-import HomeScreen from './src/screens/HomeScreen';
-import CoinDetailsScreen from './src/screens/CoinDetailsScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './src/navigation';
 import WatchListProvider from './src/Contexts/WatchListContext';
+import Animated, { FlipInEasyX } from 'react-native-reanimated';
 
 export default function App() {
   return (
@@ -18,7 +17,9 @@ export default function App() {
       <WatchListProvider>
         <View style={styles.container}>
           <StatusBar style="light" />
-          <Text style={styles.appName}>CryptoNite</Text>
+          <Animated.View entering={FlipInEasyX.duration(1000)}>
+            <Text style={styles.appName}>CryptoNite</Text>
+          </Animated.View>
           <Navigation />
         </View>
       </WatchListProvider>
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#1CD6CE',
     paddingBottom: 15
   }
 });
