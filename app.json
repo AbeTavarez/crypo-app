@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "crypto-app",
-    "slug": "crypto-app",
+    "name": "cryptonite",
+    "slug": "cryptonite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,14 +19,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.abetavarez.cryptoapp"
+      "bundleIdentifier": "com.abetavarez.cryptoniteapp"
     },
     "android": {
+      "package": "com.abetavarez.cryptoapp",
+      "versionCode": 1,
       "adaptiveIcon": {
+        "package": "com.cryptonite",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.abetavarez.cryptoapp"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
