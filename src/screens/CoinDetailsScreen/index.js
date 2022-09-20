@@ -103,7 +103,7 @@ const CoinDetailsScreen = ({}) => {
   };
 
   const pricePercentageColor =
-    price_change_percentage_24h < 0 ? '#ea3943' : '#16c784';
+    price_change_percentage_24h < 0 ? '#ea3943' : '#16c784' || '#fff';
 
   const removeTagsRegex = /<[^>]*>+/g;
 
@@ -139,13 +139,17 @@ const CoinDetailsScreen = ({}) => {
               }}
             >
               <AntDesign
-                name={price_change_percentage_24h < 0 ? 'caretdown' : 'caretup'}
+                name={
+                  price_change_percentage_24h < 0
+                    ? 'caretdown'
+                    : 'caretup' || '#fff'
+                }
                 size={12}
                 color={'white'}
                 style={{ alignSelf: 'center', marginRight: 5 }}
               />
               <Text style={styles.priceChange}>
-                {price_change_percentage_24h.toFixed(2)}
+                {price_change_percentage_24h?.toFixed(2)}
               </Text>
             </View>
           </View>
