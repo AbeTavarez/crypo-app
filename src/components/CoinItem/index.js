@@ -19,13 +19,13 @@ const CoinItem = ({ marketCoin }) => {
 
   const normalizeMarketCap = (marketCap) => {
     if (marketCap > 1e12) {
-      return `${Math.floor(marketCap / 1000000000000)} T`;
+      return `${Math.floor(marketCap / 1e12)} T`;
     } else if (marketCap > 1e9) {
-      return `${Math.floor(marketCap / 1000000000)} B`;
+      return `${Math.floor(marketCap / 1e9)} B`;
     } else if (marketCap > 1e6) {
-      return `${Math.floor(marketCap / 1000000)} M`;
+      return `${Math.floor(marketCap / 1e6)} M`;
     } else if (marketCap > 1e3) {
-      return `${Math.floor(marketCap / 1000)} K`;
+      return `${Math.floor(marketCap / 1e3)} K`;
     } else {
       return marketCap;
     }
