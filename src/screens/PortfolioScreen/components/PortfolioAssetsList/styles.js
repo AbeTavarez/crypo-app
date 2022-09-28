@@ -36,5 +36,25 @@ export default StyleSheet.create({
     paddingHorizontal: 3,
     paddingVertical: 8,
     borderRadius: 5
+  },
+  assetsLabel: {
+    color: '#fff',
+    fontSize: 23,
+    fontWeight: '700',
+    paddingVertical: 20,
+    paddingHorizontal: 10
+  },
+  buttonContainer: {
+    backgroundColor: '#4169E1',
+    padding: 10,
+    alignItems: 'center',
+    marginVertical: 25,
+    marginHorizontal: 10,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '600'
   }
 });
