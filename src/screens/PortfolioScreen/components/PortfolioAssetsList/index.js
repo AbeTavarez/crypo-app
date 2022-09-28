@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, FlatList, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import PortfolioAssetItem from '../PortfolioAssetItem';
+import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
 const PortfolioAssetsList = () => {
+  const navigation = useNavigation();
   return (
     <View>
       <FlatList
@@ -34,7 +36,10 @@ const PortfolioAssetsList = () => {
           </>
         }
         ListFooterComponent={
-          <Pressable style={styles.buttonContainer}>
+          <Pressable
+            onPress={() => navigation.navigate('AddNewAssetScreen')}
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Add New Asset</Text>
           </Pressable>
         }
