@@ -21,6 +21,37 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#1e1e1e',
     color: '#fff'
+  },
+  ticker: {
+    color: 'grey',
+    fontWeight: '700',
+    fontSize: 20,
+    marginTop: 25,
+    marginLeft: 5
+  },
+  boughtQuantityContainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 50
+  },
+  buttonContainer: {
+    backgroundColor: '#4169E1',
+    padding: 10,
+    alignItems: 'center',
+    marginVertical: 30,
+    marginHorizontal: 20,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '600'
+  },
+  pricePerCoin: {
+    color: 'grey',
+    fontWeight: '600',
+    fontSize: 17,
+    letterSpacing: 0.5
   }
 });
 
