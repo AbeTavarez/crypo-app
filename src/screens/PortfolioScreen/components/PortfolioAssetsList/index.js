@@ -5,7 +5,18 @@ import PortfolioAssetItem from '../PortfolioAssetItem';
 import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
+// Recoil
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { allPortfolioAssets } from '../../../../atoms/PortfolioAssets';
+
 const PortfolioAssetsList = () => {
+  //* gets the entire state
+  //const [assets, setAssets] = useRecoilState(allPortfolioAssets);
+
+  // gets a single value from state
+  const assets = useRecoilValue(allPortfolioAssets);
+  console.log(assets);
+
   const navigation = useNavigation();
   return (
     <View>
