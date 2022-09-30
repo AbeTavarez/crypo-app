@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './src/navigation';
 import WatchListProvider from './src/Contexts/WatchListContext';
 import Animated, { FlipInEasyX } from 'react-native-reanimated';
+import { RecoilRoot } from 'recoil';
 
 export default function App() {
   return (
@@ -14,15 +15,17 @@ export default function App() {
         }
       }}
     >
-      <WatchListProvider>
-        <View style={styles.container}>
-          <StatusBar style="light" />
-          <Animated.View entering={FlipInEasyX.duration(1000)}>
-            <Text style={styles.appName}>CryptoNite</Text>
-          </Animated.View>
-          <Navigation />
-        </View>
-      </WatchListProvider>
+      <RecoilRoot>
+        <WatchListProvider>
+          <View style={styles.container}>
+            <StatusBar style="light" />
+            <Animated.View entering={FlipInEasyX.duration(1000)}>
+              <Text style={styles.appName}>CryptoNite</Text>
+            </Animated.View>
+            <Navigation />
+          </View>
+        </WatchListProvider>
+      </RecoilRoot>
     </NavigationContainer>
   );
 }
