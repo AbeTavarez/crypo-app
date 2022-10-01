@@ -52,11 +52,6 @@ const AddNewAssetScreen = () => {
     setLoading(false);
   };
 
-  // const {
-  //   symbol,
-  //   market_data: { current_price }
-  // } = selectedCoin;
-
   const onAddNewAsset = async () => {
     const newAsset = {
       id: selectedCoin.id,
@@ -90,7 +85,7 @@ const AddNewAssetScreen = () => {
         }}
       />
 
-      {selectedCoinId && (
+      {selectedCoin && (
         <>
           <View style={styles.boughtQuantityContainer}>
             <View style={{ flexDirection: 'row' }}>
