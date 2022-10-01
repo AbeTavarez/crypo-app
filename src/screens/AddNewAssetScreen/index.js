@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Text, View, TextInput, Pressable } from 'react-native';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { getAllCoins, getCoinDetailsData } from '../../services/apis/cryptoapi';
-import styles from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 //=== Recoil
 import { useRecoilState } from 'recoil';
 import { allPortfolioBoughtAssetsInStorage } from '../../atoms/PortfolioAssets';
+import styles from './styles';
 
 const AddNewAssetScreen = () => {
   const [allCoins, setAllCoins] = useState([]);
@@ -17,7 +19,9 @@ const AddNewAssetScreen = () => {
   const [assetsInStorage, setAssetsInStorage] = useRecoilState(
     allPortfolioBoughtAssetsInStorage
   );
-  console.log(selectedCoin);
+
+  const navigation = useNavigation();
+
   useEffect(() => {
     fetchAllCoins();
   }, []);
@@ -29,8 +33,6 @@ const AddNewAssetScreen = () => {
   }, [selectedCoinId]);
 
   const isQuantityEntered = () => boughtAssetQuantity === '';
-
-  const onAddNewAsset = () => {};
 
   const fetchAllCoins = async () => {
     if (loading) return;
@@ -49,6 +51,28 @@ const AddNewAssetScreen = () => {
     setSelectedCoin(coinInfo);
     setLoading(false);
   };
+
+  // const {
+  //   symbol,
+  //   market_data: { current_price }
+  // } = selectedCoin;
+
+  const onAddNewAsset = async () => {
+    const newAsset = {
+      id: selectedCoin.id,
+      name: selectedCoin.name,
+      image: selectedCoin.image.small,
+      ticker: selectedCoin.symbol.toUpperCase(),
+      quantityBought: parseFloat(boughtAssetQuantity),
+      priceBrought: selectedCoin.market_data.current_price.usd
+    };
+    const newAssets = [...assetsInStorage, newAsset];
+    const jsonValue = JSON.stringify(newAsset);
+    await AsyncStorage.setItem('@portfolio_coins', jsonValue);
+    setAssetsInStorage(newAssets);
+    navigation.goBack();
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <SearchableDropdown
@@ -77,9 +101,14 @@ const AddNewAssetScreen = () => {
                 onChangeText={setBoughtAssetQuantity}
                 style={{ color: '#fff', fontSize: 90 }}
               />
-              <Text style={styles.ticker}>BTC</Text>
+              <Text style={styles.ticker}>
+                {' '}
+                {selectedCoin?.symbol?.toUpperCase()}
+              </Text>
             </View>
-            <Text style={styles.pricePerCoin}>$40000 per coin</Text>
+            <Text style={styles.pricePerCoin}>
+              ${selectedCoin?.market_data.current_price.usd}
+            </Text>
           </View>
 
           <Pressable
