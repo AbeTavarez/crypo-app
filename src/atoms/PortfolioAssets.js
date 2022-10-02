@@ -7,7 +7,7 @@ export const allPortfolioBoughtAssets = selector({
   key: 'allPortfolioBoughtAssets',
   get: async () => {
     const jsonValue = await AsyncStorage.getItem('@portfolio_coins');
-    return jsonValue !== null ? JSON.parse(jsonValue) : []; // this will be the initial value of the atom
+    return jsonValue !== null ? Array.from(JSON.parse(jsonValue)) : []; // this will be the initial value of the atom
   }
 });
 
@@ -18,9 +18,10 @@ export const allPortfolioBoughtAssetsFromAPI = selector({
     // we get the coins from the atom state
     const boughtPortfolioAssets = get(allPortfolioBoughtAssetsInStorage);
     // fetch coin data from API using -> boughtPortfolioAssets
+    console.log('debug:', boughtPortfolioAssets);
     const portfolioAssetsMarketData = await getWatchListedCoins(
       1,
-      boughtPortfolioAssets.map((asset) => asset.id).join(',')
+      boughtPortfolioAssets?.map((asset) => asset.id).join(',')
     );
     const boughtAssets = boughtPortfolioAssets.map((asset) => {
       // in each iteration we're going to match the curr asset.id to the item.id from portfolioAssetsMarketData
@@ -30,7 +31,7 @@ export const allPortfolioBoughtAssetsFromAPI = selector({
       return {
         ...boughtAssets,
         currentPrice: portfolioAsset.current_price,
-        priceChangePercentage: portfolioAsset.price_change_percentage_24
+        priceChangePercentage: portfolioAsset.price_change_percentage_24h
       };
     });
     return boughtAssets.sort(
