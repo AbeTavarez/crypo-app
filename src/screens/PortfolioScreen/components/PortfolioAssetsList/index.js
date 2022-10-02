@@ -20,16 +20,29 @@ const PortfolioAssetsList = () => {
     allPortfolioBoughtAssetsInStorage
   );
 
-  console.log('PortfolioAssetsList', assets);
+  // console.log('PortfolioAssetsList', assets);
 
   const navigation = useNavigation();
 
   const getCurrentBalance = () =>
-    assets.reduce(
+    assets.length &&
+    assets
+      .reduce(
+        (total, currAsset) =>
+          total + currAsset.currentPrice * currAsset.quantityBought,
+        0
+      )
+      .toFixed(2);
+
+  const getCurrentValueChange = () => {
+    const currBalance = getCurrentBalance();
+    const boughtBalance = assets.reduce(
       (total, currAsset) =>
-        total + currAsset.currentPrice * currAsset.quantityBought,
+        total + currAsset.priceBrought * currAsset.quantityBought,
       0
     );
+    return (currBalance - boughtBalance).toFixed(2);
+  };
   return (
     <View>
       <FlatList
@@ -43,7 +56,9 @@ const PortfolioAssetsList = () => {
                 <Text style={styles.currentBalanceValue}>
                   ${getCurrentBalance()}
                 </Text>
-                <Text style={styles.valueChange}>$1000 (All Time)</Text>
+                <Text style={styles.valueChange}>
+                  ${getCurrentValueChange()} (All Time)
+                </Text>
               </View>
               <View style={styles.priceChangePercentageContainer}>
                 <AntDesign

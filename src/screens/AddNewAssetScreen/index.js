@@ -49,12 +49,14 @@ const AddNewAssetScreen = () => {
 
     setLoading(true);
     const coinInfo = await getCoinDetailsData(selectedCoinId);
+    console.log('COIN INFO:::', coinInfo.market_data.current_price.usd);
     setSelectedCoin(coinInfo);
     setLoading(false);
   };
 
   const onAddNewAsset = async () => {
-    // console.log('SELECTED COIN:', selectedCoin);
+    console.log('==========================================');
+    console.log('SELECTED COIN:', selectedCoin.market_data.current_price.usd);
     const newAsset = {
       id: selectedCoin.id,
       name: selectedCoin.name,
@@ -66,9 +68,7 @@ const AddNewAssetScreen = () => {
     const newAssets = [...assetsInStorage, newAsset];
     const jsonValue = JSON.stringify(newAsset);
     await AsyncStorage.setItem('@portfolio_coins', jsonValue);
-    console.log('done1');
     setAssetsInStorage(newAssets);
-    console.log('done1');
     navigation.goBack();
   };
 
