@@ -11,17 +11,17 @@ import { allPortfolioAssets } from '../../../../atoms/PortfolioAssets';
 
 const PortfolioAssetsList = () => {
   //* gets the entire state
-  //const [assets, setAssets] = useRecoilState(allPortfolioAssets);
+  // const [assets, setAssets] = useRecoilState(allPortfolioAssets);
 
   // gets a single value from state
   const assets = useRecoilValue(allPortfolioAssets);
-  console.log(assets);
+  // console.log(assets);
 
   const navigation = useNavigation();
   return (
     <View>
       <FlatList
-        data={[{ id: 'bitcoin' }]}
+        data={assets}
         renderItem={({ item }) => <PortfolioAssetItem assetItem={item} />}
         ListHeaderComponent={
           <>

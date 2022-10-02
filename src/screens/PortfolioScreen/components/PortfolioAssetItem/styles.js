@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    alignSelf: 'flex-end'
   },
   ticker: {
     color: 'grey',
@@ -17,6 +18,12 @@ const styles = StyleSheet.create({
   quantityContainer: {
     marginLeft: 'auto',
     alignItems: 'flex-end'
+  },
+  image: {
+    height: 30,
+    width: 30,
+    marginRight: 10,
+    alignSelf: 'center'
   }
 });
 
