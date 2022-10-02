@@ -6,7 +6,7 @@ export const allPortfolioBoughtAssets = selector({
   key: 'allPortfolioBoughtAssets',
   get: async () => {
     const jsonValue = await AsyncStorage.getItem('@portfolio_coins');
-    console.log('JSON:::', jsonValue);
+    // console.log('JSONVALUE:::', jsonValue);
     return jsonValue != null ? Array.from(JSON.parse(jsonValue)) : [];
   }
 });
@@ -20,11 +20,11 @@ export const allPortfolioBoughtAssetsFromAPI = selector({
       boughtPortfolioAssets.map((portfolioAsset) => portfolioAsset.id).join(',')
     );
     const boughtAssets = boughtPortfolioAssets.map((boughtAsset) => {
-      console.log('LOGGG', portfolioAssetsMarketData);
+      // console.log('SELECTOR:::', portfolioAssetsMarketData);
       const portfolioAsset = portfolioAssetsMarketData.filter(
         (item) => boughtAsset.id === item.id
       )[0];
-      console.log('LOGGG', boughtAssets);
+      // console.log('SELECTOR:::', boughtAssets);
       return {
         ...boughtAsset,
         currentPrice: portfolioAsset.current_price,
