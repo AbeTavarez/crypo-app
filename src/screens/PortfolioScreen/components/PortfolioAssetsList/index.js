@@ -6,18 +6,30 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
 // Recoil
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { allPortfolioAssets } from '../../../../atoms/PortfolioAssets';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import {
+  allPortfolioAssets,
+  allPortfolioBoughtAssetsInStorage
+} from '../../../../atoms/PortfolioAssets';
 
 const PortfolioAssetsList = () => {
-  //* gets the entire state
-  // const [assets, setAssets] = useRecoilState(allPortfolioAssets);
-
-  // gets a single value from state
+  //* gets a single value from state
   const assets = useRecoilValue(allPortfolioAssets);
-  // console.log(assets);
+  //* gets the entire state
+  const [storageAssets, setStorageAssets] = useRecoilState(
+    allPortfolioBoughtAssetsInStorage
+  );
+
+  console.log('PortfolioAssetsList', assets);
 
   const navigation = useNavigation();
+
+  const getCurrentBalance = () =>
+    assets.reduce(
+      (total, currAsset) =>
+        total + currAsset.currentPrice * currAsset.quantityBought,
+      0
+    );
   return (
     <View>
       <FlatList
@@ -28,7 +40,9 @@ const PortfolioAssetsList = () => {
             <View style={styles.balanceContainer}>
               <View>
                 <Text style={styles.currentBalance}>Current Balance</Text>
-                <Text style={styles.currentBalanceValue}>$200,000</Text>
+                <Text style={styles.currentBalanceValue}>
+                  ${getCurrentBalance()}
+                </Text>
                 <Text style={styles.valueChange}>$1000 (All Time)</Text>
               </View>
               <View style={styles.priceChangePercentageContainer}>
