@@ -17,7 +17,6 @@ export const getCoinDetailsData = async (coinId) => {
     const res = await axios.get(
       `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false`
     );
-
     return res.data;
   } catch (e) {
     console.error(e);
