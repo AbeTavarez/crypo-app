@@ -55,8 +55,7 @@ const AddNewAssetScreen = () => {
   };
 
   const onAddNewAsset = async () => {
-    console.log('==========================================');
-    console.log('SELECTED COIN:', selectedCoin.market_data.current_price.usd);
+    // console.log('SELECTED COIN:', selectedCoin.market_data.current_price.usd);
     const newAsset = {
       id: selectedCoin.id,
       name: selectedCoin.name,
@@ -66,7 +65,7 @@ const AddNewAssetScreen = () => {
       priceBrought: selectedCoin.market_data.current_price.usd
     };
     const newAssets = [...assetsInStorage, newAsset];
-    const jsonValue = JSON.stringify(newAsset);
+    const jsonValue = JSON.stringify(newAssets);
     await AsyncStorage.setItem('@portfolio_coins', jsonValue);
     setAssetsInStorage(newAssets);
     navigation.goBack();
