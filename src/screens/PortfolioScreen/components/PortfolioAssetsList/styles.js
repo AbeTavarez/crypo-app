@@ -13,7 +13,7 @@ export default StyleSheet.create({
     letterSpacing: 1
   },
   valueChange: {
-    color: '#16c784',
+    // color: '#16c784',
     fontSize: 16
     // fontWeight: '700'
   },
@@ -32,7 +32,6 @@ export default StyleSheet.create({
   },
   priceChangePercentageContainer: {
     flexDirection: 'row',
-    backgroundColor: '#16c784',
     paddingHorizontal: 3,
     paddingVertical: 8,
     borderRadius: 5

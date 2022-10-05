@@ -3,7 +3,7 @@ import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
 
 const PortfolioAssetItem = ({ assetItem }) => {
-  // console.log('debug', assetItem);
+  // console.log('PortfolioAssetItem', assetItem);
   const {
     name,
     currentPrice,
@@ -13,6 +13,11 @@ const PortfolioAssetItem = ({ assetItem }) => {
     quantityBought,
     ticker
   } = assetItem;
+
+  const isChangePositive = () => priceChangePercentage >= 0;
+
+  const calculateHoldings = () => (quantityBought * currentPrice).toFixed(2);
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.image} />
@@ -25,19 +30,24 @@ const PortfolioAssetItem = ({ assetItem }) => {
         <Text style={styles.title}>${currentPrice}</Text>
         <View style={{ flexDirection: 'row' }}>
           <AntDesign
-            name="caretup"
+            name={isChangePositive() ? 'caretup' : 'caretdown'}
             size={12}
-            color={'#16c784'}
+            color={isChangePositive() ? '#16c784' : '#ea3943'}
             style={{ alignSelf: 'center', marginRight: 5 }}
           />
-          <Text style={{ color: '#16c784', fontWeight: '600' }}>
-            {priceChangePercentage.toFixed(2)}%
+          <Text
+            style={{
+              color: isChangePositive() ? '#16c784' : '#ea3943',
+              fontWeight: '600'
+            }}
+          >
+            {priceChangePercentage?.toFixed(2)}%
           </Text>
         </View>
       </View>
 
       <View style={styles.quantityContainer}>
-        <Text style={styles.title}>$80000</Text>
+        <Text style={styles.title}>{calculateHoldings()}</Text>
         <Text style={styles.ticker}>
           {quantityBought}
           {ticker}

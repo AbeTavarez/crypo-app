@@ -6,56 +6,108 @@ import { useNavigation } from '@react-navigation/native';
 import styles from './styles';
 
 // Recoil
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { allPortfolioAssets } from '../../../../atoms/PortfolioAssets';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import {
+  allPortfolioAssets,
+  allPortfolioBoughtAssetsInStorage
+} from '../../../../atoms/PortfolioAssets';
 
 const PortfolioAssetsList = () => {
-  //* gets the entire state
-  // const [assets, setAssets] = useRecoilState(allPortfolioAssets);
-
-  // gets a single value from state
+  //* gets a single value from state
   const assets = useRecoilValue(allPortfolioAssets);
-  // console.log(assets);
+  //* gets the entire state
+  const [storageAssets, setStorageAssets] = useRecoilState(
+    allPortfolioBoughtAssetsInStorage
+  );
+
+  // console.log('PortfolioAssetsList', assets);
 
   const navigation = useNavigation();
+
+  const getCurrentBalance = () =>
+    assets.length &&
+    assets
+      .reduce(
+        (total, currAsset) =>
+          total + currAsset.currentPrice * currAsset.quantityBought,
+        0
+      )
+      .toFixed(2);
+
+  const getCurrentValueChange = () => {
+    const currBalance = getCurrentBalance();
+    const boughtBalance = assets.reduce(
+      (total, currAsset) =>
+        total + currAsset.priceBrought * currAsset.quantityBought,
+      0
+    );
+    return (currBalance - boughtBalance).toFixed(2);
+  };
+
+  const getCurrentPercentageChange = () => {
+    const currBalance = getCurrentBalance();
+    const boughtBalance = assets.reduce(
+      (total, currAsset) =>
+        total + currAsset.priceBrought * currAsset.quantityBought,
+      0
+    );
+    return (((currBalance - boughtBalance) / boughtBalance) * 100).toFixed(2);
+  };
+
+  const isChangePositive = () => getCurrentValueChange() >= 0;
+
   return (
-    <View>
-      <FlatList
-        data={assets}
-        renderItem={({ item }) => <PortfolioAssetItem assetItem={item} />}
-        ListHeaderComponent={
-          <>
-            <View style={styles.balanceContainer}>
-              <View>
-                <Text style={styles.currentBalance}>Current Balance</Text>
-                <Text style={styles.currentBalanceValue}>$200,000</Text>
-                <Text style={styles.valueChange}>$1000 (All Time)</Text>
-              </View>
-              <View style={styles.priceChangePercentageContainer}>
-                <AntDesign
-                  name="caretup"
-                  size={12}
-                  color={'white'}
-                  style={{ alignSelf: 'center', marginRight: 5 }}
-                />
-                <Text style={styles.percentageChange}>1.2%</Text>
-              </View>
-            </View>
+    <FlatList
+      data={assets}
+      renderItem={({ item }) => <PortfolioAssetItem assetItem={item} />}
+      ListHeaderComponent={
+        <>
+          <View style={styles.balanceContainer}>
             <View>
-              <Text style={styles.assetsLabel}>Your Assets</Text>
+              <Text style={styles.currentBalance}>Current Balance</Text>
+              <Text style={styles.currentBalanceValue}>
+                ${getCurrentBalance()}
+              </Text>
+              <Text
+                style={{
+                  ...styles.valueChange,
+                  color: isChangePositive() ? 'green' : 'red'
+                }}
+              >
+                ${getCurrentValueChange()} (All Time)
+              </Text>
             </View>
-          </>
-        }
-        ListFooterComponent={
-          <Pressable
-            onPress={() => navigation.navigate('AddNewAssetScreen')}
-            style={styles.buttonContainer}
-          >
-            <Text style={styles.buttonText}>Add New Asset</Text>
-          </Pressable>
-        }
-      />
-    </View>
+            <View
+              style={{
+                ...styles.priceChangePercentageContainer,
+                backgroundColor: isChangePositive() ? 'green' : 'red'
+              }}
+            >
+              <AntDesign
+                name={isChangePositive() ? 'caretup' : 'caretdown'}
+                size={12}
+                color={'white'}
+                style={{ alignSelf: 'center', marginRight: 5 }}
+              />
+              <Text style={styles.percentageChange}>
+                {getCurrentPercentageChange()}%
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.assetsLabel}>Your Assets</Text>
+          </View>
+        </>
+      }
+      ListFooterComponent={
+        <Pressable
+          onPress={() => navigation.navigate('AddNewAssetScreen')}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>Add New Asset</Text>
+        </Pressable>
+      }
+    />
   );
 };
 

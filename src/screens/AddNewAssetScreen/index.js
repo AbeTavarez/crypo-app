@@ -16,10 +16,11 @@ const AddNewAssetScreen = () => {
   const [loading, setLoading] = useState(false);
   const [selectedCoinId, setSelectedCoinId] = useState(null);
   const [selectedCoin, setSelectedCoin] = useState(null);
+
   const [assetsInStorage, setAssetsInStorage] = useRecoilState(
     allPortfolioBoughtAssetsInStorage
   );
-
+  console.log('assetsInStorage', assetsInStorage);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -48,11 +49,13 @@ const AddNewAssetScreen = () => {
 
     setLoading(true);
     const coinInfo = await getCoinDetailsData(selectedCoinId);
+    console.log('COIN INFO:::', coinInfo.market_data.current_price.usd);
     setSelectedCoin(coinInfo);
     setLoading(false);
   };
 
   const onAddNewAsset = async () => {
+    // console.log('SELECTED COIN:', selectedCoin.market_data.current_price.usd);
     const newAsset = {
       id: selectedCoin.id,
       name: selectedCoin.name,
@@ -62,7 +65,7 @@ const AddNewAssetScreen = () => {
       priceBrought: selectedCoin.market_data.current_price.usd
     };
     const newAssets = [...assetsInStorage, newAsset];
-    const jsonValue = JSON.stringify(newAsset);
+    const jsonValue = JSON.stringify(newAssets);
     await AsyncStorage.setItem('@portfolio_coins', jsonValue);
     setAssetsInStorage(newAssets);
     navigation.goBack();
