@@ -1,12 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './src/navigation';
 import WatchListProvider from './src/Contexts/WatchListContext';
 import Animated, { FlipInEasyX } from 'react-native-reanimated';
 import { RecoilRoot } from 'recoil';
 
+import { useFonts } from 'expo-font';
+
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Kaushan: require('./assets/fonts/KaushanScript-Regular.otf')
+  });
+  if (!fontsLoaded) {
+    return <ActivityIndicator size={'large'} />;
+  }
+
   return (
     <NavigationContainer
       theme={{
@@ -40,6 +49,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 28,
     fontWeight: 'bold',
+    fontFamily: 'Kaushan',
+    letterSpacing: 1,
     color: '#1CD6CE',
     paddingBottom: 15
   }
