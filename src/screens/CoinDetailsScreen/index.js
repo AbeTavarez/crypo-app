@@ -21,6 +21,7 @@ import {
   getCoinMarketChart
 } from '../../services/apis/cryptoapi';
 import { styles } from './styles';
+import FilterComponent from './components/FilterComponent';
 
 const CoinDetailsScreen = ({}) => {
   // ===== Coin Data fetching ===== >
@@ -73,7 +74,7 @@ const CoinDetailsScreen = ({}) => {
     chat_url
   } = coinData;
 
-  const { market_caps } = coinMarketData;
+  const { prices } = coinMarketData;
   // console.log(coinMarketData);
   // console.log(coinData);
 
@@ -102,6 +103,9 @@ const CoinDetailsScreen = ({}) => {
       }
       return `$${current_price.usd.toFixed(2)}`;
     }
+    if (current_price.usd < 1) {
+      return `$${parseFloat(value)}`;
+    }
     return `$${parseFloat(value).toFixed(2)}`;
   };
 
@@ -112,10 +116,10 @@ const CoinDetailsScreen = ({}) => {
 
   return (
     <ScrollView style={styles.container}>
-      {market_caps.length > 0 && (
+      {prices.length > 0 && (
         <ChartPathProvider
           data={{
-            points: market_caps.map((price) => ({ x: price[0], y: price[1] })),
+            points: prices.map((price) => ({ x: price[0], y: price[1] })),
             smoothingStrategy: 'simple'
           }}
         >
@@ -156,18 +160,24 @@ const CoinDetailsScreen = ({}) => {
               </Text>
             </View>
           </View>
-
+          <View style={styles.filtersContainer}>
+            <FilterComponent filterDay="1" filterText="24h" />
+            <FilterComponent filterDay="7" filterText="7d" />
+            <FilterComponent filterDay="30" filterText="30d" />
+            <FilterComponent filterDay="365" filterText="1y" />
+            <FilterComponent filterDay="max" filterText="All" />
+          </View>
           <View>
             <ChartPath
+              width={screenWidth}
               height={screenWidth / 2}
+              strokeWidth={2}
               stroke="yellow"
               // stroke={
               //   current_price.usd > market_caps && market_caps[0][1]
               //     ? '#16c784'
               //     : '#ea3943'
               // }
-              strokeWidth={2}
-              width={screenWidth}
             />
             <ChartDot
               size={10}

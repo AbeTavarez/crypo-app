@@ -74,5 +74,13 @@ export const styles = StyleSheet.create({
     marginHorizontal: 5,
     flexDirection: 'column',
     justifyContent: 'space-between'
+  },
+  filtersContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#2B2B2B',
+    padding: 5,
+    borderRadius: 5,
+    marginVertical: 10
   }
 });
