@@ -16,7 +16,9 @@ const WatchListScreen = () => {
   //Todo:  For pagination
   //:? if watchListCoinIds.length !=== coins.length then fetch more
   useEffect(() => {
-    fetchWatchListedCoins();
+    if (watchListCoinIds.length > 0) {
+      fetchWatchListedCoins();
+    }
   }, [watchListCoinIds]);
 
   const fetchWatchListedCoins = async () => {
