@@ -26,7 +26,7 @@ const PortfolioAssetItem = ({ assetItem }) => {
         <Text style={styles.ticker}>{ticker}</Text>
       </View>
 
-      <View style={{ marginLeft: 'auto' }}>
+      <View style={{ marginLeft: 'auto', alignItems: 'flex-end' }}>
         <Text style={styles.title}>${currentPrice}</Text>
         <View style={{ flexDirection: 'row' }}>
           <AntDesign
