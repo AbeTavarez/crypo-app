@@ -1,18 +1,23 @@
-import { View, Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
 
-const FilterComponent = ({ filterDay, filterText }) => {
+const FilterComponent = (props) => {
+  const { filterDay, filterText, selectedRange, setSelectedRange } = props;
+  const isFilterSelected = (filter) => filter === selectedRange;
   return (
-    <View
+    <Pressable
       style={{
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 5,
         paddingVertical: 5,
-        backgroundColor: '#1e1e1e'
+        backgroundColor: isFilterSelected(filterDay) ? '#1e1e1e' : 'transparent'
       }}
+      onPress={() => setSelectedRange(filterDay)}
     >
-      <Text style={{ color: '#fff' }}>{filterText}</Text>
-    </View>
+      <Text style={{ color: isFilterSelected(filterDay) ? '#fff' : 'grey' }}>
+        {filterText}
+      </Text>
+    </Pressable>
   );
 };
 
