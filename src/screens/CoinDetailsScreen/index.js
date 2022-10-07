@@ -23,6 +23,14 @@ import {
 import { styles } from './styles';
 import FilterComponent from './components/FilterComponent';
 
+const filterDaysArray = [
+  { filterDay: '1', filterText: '24h' },
+  { filterDay: '7', filterText: '7d' },
+  { filterDay: '30', filterText: '30d' },
+  { filterDay: '365', filterText: '1y' },
+  { filterDay: 'max', filterText: 'All' }
+];
+
 const CoinDetailsScreen = ({}) => {
   // ===== Coin Data fetching ===== >
   const [coinData, setCoinData] = useState(null);
@@ -30,6 +38,7 @@ const CoinDetailsScreen = ({}) => {
   const [isFetching, setIsFetching] = useState(false);
   const [coinValue, setCoinValue] = useState('1');
   const [usdValue, setUsdValue] = useState('');
+  const [selectedRange, setSelectedRange] = useState('1');
 
   const route = useRoute();
   const {
@@ -40,15 +49,22 @@ const CoinDetailsScreen = ({}) => {
   const fetchCoinData = async (coinId) => {
     setIsFetching(true);
     const fetchedData = await getCoinDetailsData(coinId);
-    const fetchedCoinMarketData = await getCoinMarketChart(coinId);
     setCoinData(fetchedData);
-    setCoinMarketData(fetchedCoinMarketData);
     setUsdValue(fetchedData.market_data.current_price.usd.toString());
     setIsFetching(false);
+  };
+
+  const fetchMarketCoinData = async (selectedRangeValue) => {
+    const fetchedCoinMarketData = await getCoinMarketChart(
+      coinId,
+      selectedRangeValue
+    );
+    setCoinMarketData(fetchedCoinMarketData);
   };
   // fetching on load
   useEffect(() => {
     fetchCoinData(coinId);
+    fetchMarketCoinData(1);
   }, []);
 
   if (!coinData || !coinMarketData || isFetching) {
@@ -114,130 +130,128 @@ const CoinDetailsScreen = ({}) => {
 
   const removeTagsRegex = /<[^>]*>+/g;
 
+  const onSelectedRangeChange = (selectedRangeValue) => {
+    setSelectedRange(selectedRangeValue);
+    fetchMarketCoinData(selectedRangeValue);
+  };
+
   return (
     <ScrollView style={styles.container}>
-      {prices.length > 0 && (
-        <ChartPathProvider
-          data={{
-            points: prices.map((price) => ({ x: price[0], y: price[1] })),
-            smoothingStrategy: 'simple'
-          }}
-        >
-          <CoinDetailsHeader
-            coinId={id}
-            image={small}
-            symbol={symbol}
-            market_cap_rank={market_cap_rank}
+      {/* {prices.length > 0 && ( */}
+      <ChartPathProvider
+        data={{
+          points: prices.map((price) => ({ x: price[0], y: price[1] }))
+        }}
+      >
+        <CoinDetailsHeader
+          coinId={id}
+          image={small}
+          symbol={symbol}
+          market_cap_rank={market_cap_rank}
+        />
+
+        <View style={styles.priceContainer}>
+          <View>
+            <Text style={styles.name}>{name}</Text>
+            <ChartYLabel format={formatCurrency} style={styles.currentPrice} />
+          </View>
+
+          <View
+            style={{
+              backgroundColor: pricePercentageColor,
+              ...styles.priceChangeContainer
+            }}
+          >
+            <AntDesign
+              name={
+                price_change_percentage_24h < 0
+                  ? 'caretdown'
+                  : 'caretup' || '#fff'
+              }
+              size={12}
+              color={'white'}
+              style={{ alignSelf: 'center', marginRight: 5 }}
+            />
+            <Text style={styles.priceChange}>
+              {price_change_percentage_24h?.toFixed(2)}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.filtersContainer}>
+          {filterDaysArray.map((day) => (
+            <FilterComponent
+              filterDay={day.filterDay}
+              filterText={day.filterText}
+              selectedRange={selectedRange}
+              setSelectedRange={onSelectedRangeChange}
+              key={day.filterDay}
+            />
+          ))}
+        </View>
+        <View>
+          <ChartPath
+            width={screenWidth}
+            height={screenWidth / 2}
+            strokeWidth={2}
+            stroke={current_price.usd > prices[0][1] ? '#16c784' : '#ea3943'}
           />
-
-          <View style={styles.priceContainer}>
-            <View>
-              <Text style={styles.name}>{name}</Text>
-              <ChartYLabel
-                format={formatCurrency}
-                style={styles.currentPrice}
+          <ChartDot
+            size={10}
+            style={{
+              backgroundColor:
+                current_price.usd > prices[0][1] ? '#16c784' : '#ea3943'
+            }}
+          />
+        </View>
+        {/* ============== Calculate ====================== */}
+        <View>
+          <Text style={styles.header}>Calculate</Text>
+          <View style={styles.currCalContainer}>
+            <View style={styles.calRow}>
+              <Text style={styles.calText}>{symbol.toUpperCase()}</Text>
+              <TextInput
+                style={styles.textInput}
+                value={coinValue}
+                keyboardType="numeric"
+                onChangeText={onChangeCoinValue}
               />
             </View>
 
-            <View
-              style={{
-                backgroundColor: pricePercentageColor,
-                ...styles.priceChangeContainer
-              }}
-            >
-              <AntDesign
-                name={
-                  price_change_percentage_24h < 0
-                    ? 'caretdown'
-                    : 'caretup' || '#fff'
-                }
-                size={12}
-                color={'white'}
-                style={{ alignSelf: 'center', marginRight: 5 }}
+            <View style={styles.calRow}>
+              <Text style={styles.calText}>USD</Text>
+              <TextInput
+                placeholder="Amount"
+                style={styles.textInput}
+                value={usdValue}
+                keyboardType="number-pad"
+                onChangeText={onChangeUsdValue}
               />
-              <Text style={styles.priceChange}>
-                {price_change_percentage_24h?.toFixed(2)}
-              </Text>
             </View>
           </View>
-          <View style={styles.filtersContainer}>
-            <FilterComponent filterDay="1" filterText="24h" />
-            <FilterComponent filterDay="7" filterText="7d" />
-            <FilterComponent filterDay="30" filterText="30d" />
-            <FilterComponent filterDay="365" filterText="1y" />
-            <FilterComponent filterDay="max" filterText="All" />
-          </View>
-          <View>
-            <ChartPath
-              width={screenWidth}
-              height={screenWidth / 2}
-              strokeWidth={2}
-              stroke="yellow"
-              // stroke={
-              //   current_price.usd > market_caps && market_caps[0][1]
-              //     ? '#16c784'
-              //     : '#ea3943'
-              // }
-            />
-            <ChartDot
-              size={10}
-              // style={{
-              //   backgroundColor:
-              //     current_price.usd > market_caps && market_caps[0][1]
-              //       ? '#16c784'
-              //       : '#ea3943'
-              // }}
-            />
-          </View>
-          {/* ============== Calculate ====================== */}
-          <View>
-            <Text style={styles.header}>Calculate</Text>
-            <View style={styles.currCalContainer}>
-              <View style={styles.calRow}>
-                <Text style={styles.calText}>{symbol.toUpperCase()}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={coinValue}
-                  keyboardType="numeric"
-                  onChangeText={onChangeCoinValue}
-                />
-              </View>
+        </View>
 
-              <View style={styles.calRow}>
-                <Text style={styles.calText}>USD</Text>
-                <TextInput
-                  placeholder="Amount"
-                  style={styles.textInput}
-                  value={usdValue}
-                  keyboardType="number-pad"
-                  onChangeText={onChangeUsdValue}
-                />
-              </View>
-            </View>
-          </View>
+        <View style={styles.highlightsContainer}>
+          <Text style={styles.header}>Stats</Text>
+          <Text style={styles.textDetail}>
+            Liquidity Score: {liquidity_score}
+          </Text>
+          <Text style={styles.textDetail}>
+            Developer Score: {developer_score}
+          </Text>
+          <Text style={styles.textDetail}>Genesis Date: {genesis_date}</Text>
+          <Text style={styles.textDetail}>
+            hashing Algorithm: {hashing_algorithm}
+          </Text>
+        </View>
 
-          <View style={styles.highlightsContainer}>
-            <Text style={styles.header}>Stats</Text>
-            <Text style={styles.textDetail}>
-              Liquidity Score: {liquidity_score}
-            </Text>
-            <Text style={styles.textDetail}>
-              Developer Score: {developer_score}
-            </Text>
-            <Text style={styles.textDetail}>Genesis Date: {genesis_date}</Text>
-            <Text style={styles.textDetail}>
-              hashing Algorithm: {hashing_algorithm}
-            </Text>
-          </View>
-
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.header}>About {symbol.toUpperCase()}</Text>
-            <Text style={styles.textDetail}>
-              {description.en.replaceAll(removeTagsRegex, '')}
-            </Text>
-          </View>
-        </ChartPathProvider>
-      )}
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.header}>About {symbol.toUpperCase()}</Text>
+          <Text style={styles.textDetail}>
+            {description.en.replaceAll(removeTagsRegex, '')}
+          </Text>
+        </View>
+      </ChartPathProvider>
+      {/* )} */}
     </ScrollView>
   );
 };
