@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, FlatList, Pressable } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { View, Text, Pressable } from 'react-native';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import PortfolioAssetItem from '../PortfolioAssetItem';
 import { useNavigation } from '@react-navigation/native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import styles from './styles';
 
 // Recoil
@@ -56,10 +57,21 @@ const PortfolioAssetsList = () => {
 
   const isChangePositive = () => getCurrentValueChange() >= 0;
 
+  const renderDeleteButton = () => {
+    return (
+      <Pressable style={styles.deleteButton}>
+        <FontAwesome name="trash-o" size={24} color="#fff" />
+      </Pressable>
+    );
+  };
+
   return (
-    <FlatList
+    <SwipeListView
       data={assets}
       renderItem={({ item }) => <PortfolioAssetItem assetItem={item} />}
+      rightOpenValue={-75}
+      disableRightSwipe
+      renderHiddenItem={(data, rowMap) => renderDeleteButton()}
       ListHeaderComponent={
         <>
           <View style={styles.balanceContainer}>

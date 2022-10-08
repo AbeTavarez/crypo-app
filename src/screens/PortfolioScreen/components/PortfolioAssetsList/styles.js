@@ -55,5 +55,13 @@ export default StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '600'
+  },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: '#EA3943',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 30,
+    marginLeft: 20
   }
 });
