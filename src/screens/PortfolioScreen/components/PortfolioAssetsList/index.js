@@ -4,6 +4,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import PortfolioAssetItem from '../PortfolioAssetItem';
 import { useNavigation } from '@react-navigation/native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 
 // Recoil
@@ -52,14 +53,28 @@ const PortfolioAssetsList = () => {
         total + currAsset.priceBrought * currAsset.quantityBought,
       0
     );
-    return (((currBalance - boughtBalance) / boughtBalance) * 100).toFixed(2);
+    return currBalance > 0
+      ? (((currBalance - boughtBalance) / boughtBalance) * 100).toFixed(2)
+      : 0;
   };
 
   const isChangePositive = () => getCurrentValueChange() >= 0;
 
-  const renderDeleteButton = () => {
+  const onDeleteAsset = async (asset) => {
+    const newAssets = storageAssets.filter(
+      (coin, idx) => coin.unique_id !== asset.item.unique_id
+    );
+    const jsonValue = JSON.stringify(newAssets);
+    await AsyncStorage.setItem('@portfolio_coins', jsonValue);
+    setStorageAssets(newAssets);
+  };
+
+  const renderDeleteButton = (data) => {
     return (
-      <Pressable style={styles.deleteButton}>
+      <Pressable
+        style={styles.deleteButton}
+        onPress={() => onDeleteAsset(data)}
+      >
         <FontAwesome name="trash-o" size={24} color="#fff" />
       </Pressable>
     );
@@ -71,7 +86,8 @@ const PortfolioAssetsList = () => {
       renderItem={({ item }) => <PortfolioAssetItem assetItem={item} />}
       rightOpenValue={-75}
       disableRightSwipe
-      renderHiddenItem={(data, rowMap) => renderDeleteButton()}
+      renderHiddenItem={(data, rowMap) => renderDeleteButton(data)}
+      keyExtractor={(id, idx) => `${id}-${idx}`}
       ListHeaderComponent={
         <>
           <View style={styles.balanceContainer}>
