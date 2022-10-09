@@ -4,6 +4,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import { getAllCoins, getCoinDetailsData } from '../../services/apis/cryptoapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 //=== Recoil
 import { useRecoilState } from 'recoil';
@@ -56,8 +57,10 @@ const AddNewAssetScreen = () => {
 
   const onAddNewAsset = async () => {
     // console.log('SELECTED COIN:', selectedCoin.market_data.current_price.usd);
+
     const newAsset = {
       id: selectedCoin.id,
+      unique_id: `${selectedCoin.id}-${uuid.v4()}`,
       name: selectedCoin.name,
       image: selectedCoin.image.small,
       ticker: selectedCoin.symbol.toUpperCase(),
