@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Text, View, TextInput, Pressable } from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { getAllCoins, getCoinDetailsData } from '../../services/apis/cryptoapi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +16,7 @@ import uuid from 'react-native-uuid';
 //=== Recoil
 import { useRecoilState } from 'recoil';
 import { allPortfolioBoughtAssetsInStorage } from '../../atoms/PortfolioAssets';
-import styles from './styles';
+import { styles, keyboardStyles } from './styles';
 
 const AddNewAssetScreen = () => {
   const [allCoins, setAllCoins] = useState([]);
@@ -112,23 +119,29 @@ const AddNewAssetScreen = () => {
             </Text>
           </View>
 
-          <Pressable
-            style={{
-              ...styles.buttonContainer,
-              backgroundColor: isQuantityEntered() ? '#303030' : '#1469E1'
-            }}
-            onPress={onAddNewAsset}
-            disabled={isQuantityEntered()}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={keyboardStyles.container}
           >
-            <Text
+            <Pressable
               style={{
-                ...styles.buttonText,
-                color: isQuantityEntered() ? 'grey' : '#fff'
+                ...styles.buttonContainer,
+                backgroundColor: isQuantityEntered() ? '#303030' : '#1469E1',
+                ...keyboardStyles.btnContainer
               }}
+              onPress={onAddNewAsset}
+              disabled={isQuantityEntered()}
             >
-              Add New Asset
-            </Text>
-          </Pressable>
+              <Text
+                style={{
+                  ...styles.buttonText,
+                  color: isQuantityEntered() ? 'grey' : '#fff'
+                }}
+              >
+                Add New Asset
+              </Text>
+            </Pressable>
+          </KeyboardAvoidingView>
         </>
       )}
     </View>

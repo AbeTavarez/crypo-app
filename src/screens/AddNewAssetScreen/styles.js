@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   dropdownContainer: {
     width: '100%',
     paddingHorizontal: 10,
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
   boughtQuantityContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 50
+    marginTop: 50,
+    marginBottom: 0
   },
   buttonContainer: {
     padding: 10,
@@ -54,4 +55,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default styles;
+export const keyboardStyles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  btnContainer: {
+    marginTop: 0
+  }
+});
